@@ -1,3 +1,5 @@
+// vim: et:ts=4:sw=4:syntax=groovy
+
 pipeline {
   agent { node { label 'npm' } }
   environment {
@@ -13,7 +15,27 @@ pipeline {
     stage ('optimize maps') {
       steps {
         // TODO: all available maps
-        sh "tile-optimizer -i entry.json -o optimized";
+        sh '''
+            for i in *.json;do
+                echo "optimizing $i"
+                tile-optimizer -i $i -o optimized
+            done
+        ''';
+
+      }
+    }
+
+    stage ('render screenshots of maps') {
+      steps {
+        sh '''
+          mkdir -p screenshots/
+          for i in optimized/*.json;do
+              echo "rendering screenshot of $i"
+              tmxrasterizer --ignore-visibility "$i" "screenshots/$(basename $i | sed 's/.json$//').png"
+          done
+
+        ''';
+
       }
     }
     stage ('deploy maps to live') {
@@ -33,6 +55,7 @@ pipeline {
   post {
     always {
       archiveArtifacts artifacts: 'optimized/*'
+      archiveArtifacts artifacts: 'screenshots/*.png'
       sh "(echo '${currentBuild.fullDisplayName}: Finished Build with status ${currentBuild.result} (took ${currentBuild.durationString})';echo 'Changes:\n${changelog}See also ${currentBuild.absoluteUrl}') | announce_config=/etc/workadventure-announce.cfg citadel-send-announce"
     }
   }

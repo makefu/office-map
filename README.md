@@ -1,76 +1,42 @@
-# WorkAdventure Map Starter Kit
+# MLS Workadventure Office Map
+Welcome to the workadventure map of TTS MOM.
 
-This is a starter kit to help you build your own map for [WorkAdventure](https://workadventu.re).
+## Structure
 
-## Tools you will need
+- `*.json` tiled map files
+- `entry.json` - the default map which will be loaded when a user connects via [work.search4ce.app.de.corp.thales](https://work.search4ce.app.de.corp.thales)
+- `*.png` - the sprites used for the maps we have
 
-In order to build your own map for WorkAdventure, you need:
+## Documentation
+See https://workadventu.re/create-map.html on how to create and edit maps
+
+In order to edit this map for WorkAdventure, you need:
 
 - the [Tiled editor](https://www.mapeditor.org/) software
 - "tiles" (i.e. images) to create your map (this starter kit provides a good default tileset for offices)
-- a web-server to serve your map (this starter kit proposes to use Github static pages as a web-server which is both free and performant)
 
-## Getting started
 
-On the [Github repository page](https://github.com/thecodingmachine/workadventure-map-starter-kit),
-click the **"Use this template"** button. You will be prompted to enter a repository name for your map.
+## Release workflow
 
-![](docs/create_repo.png)
+The Jenkinsfile is configured to provide a Continuous Delivery Environment.
+All changes to the map should be performed via Pull Requests to avoid breakage
+of the map.
 
-Be sure to keep the repository "Public".
+In the pipeline the original map and tiles will be `optimized` with the
+`map-optimizer` tool for workadventure.
 
-In your newly created repository, click on the **Settings tab** and scroll down to the **GitHub Pages** section.
-Then select the **master** branch. 
+### master branch
 
-![](docs/github_pages.png)
+Commits towards the `master` branch will be delivered to the workadventure
+instance as the new map everyone will be seeing when the (re-)connect to the
+server.  The map can be found under [https://work.search4ce.app.de.corp.thales/maps/](https://work.search4ce.app.de.corp.thales/maps/)
+and `entry.json` will serve as the default map for the server. For everyone to
+use the map, they have to refresh the connection.
 
-Wait a few minutes a Github will deploy a new website with the content of the repository.
-The address of the website is visible in the "GitHub Pages" section.
+### Not master branch
 
-![](docs/website_address.png)
-
-Click on the link. You should be redirected directly to WorkAdventure, on your map!
-
-## Customizing your map
-
-Your map is now up and online. You need to customize it.
-
-### Cloning the map
-
-Start by cloning the map. If you are used to Git and GitHub, simply clone the map
-to your computer using your preferred tool and jump to the next chapter.
-
-If you are new to Git, cloning the map means downloading the map to your computer.
-To do this, you will need Git, or a Git compatible tool. Our advice is to use
-[GitHub Desktop](https://desktop.github.com/).
-
-TODO: test and continue
-
-### Loading the map in Tiled
-
-The sample map is in the file `map.json`.
-You can load this file in [Tiled](https://www.mapeditor.org/).
-
-Now, it's up to you to edit the map and write your own map.
-
-Some resources regarding Tiled:
-
-- [Tiled documentation](https://doc.mapeditor.org/en/stable/manual/introduction/)
-- [Tiled video tutorials](https://www.gamefromscratch.com/post/2015/10/14/Tiled-Map-Editor-Tutorial-Series.aspx)
-
-### About WorkAdventu.re maps
-
-In order to design a map that will be readable by WorkAdventure, you will have to respect some constraints.
-
-In particular, you will need to:
-
-- set a start position for the players
-- configure the "floor layer" (so that WorkAdventure can correctly display characters above the floor, but under the ceiling)
-- eventually, you can place exits that link to other maps
-
-All this is described in the [WorkAdventure documentation](https://github.com/thecodingmachine/workadventure/#designing-a-map).
-Please be sure to check it out. 
-
-### Pushing the map
-
-When your changes are ready, you need to "commit" and "push" the changes back to GitHub.
+Every commit `not` to master will also be deployed to the workadventure
+instance, however it will be copied to [work.search4ce.app.de.corp.thales/maps/snapshot/](https://work.search4ce.app.de.corp.thales/maps/snapshot/)
+and will not be used by default. However, you can test these maps starting the
+workadventure instance via [work.search4ce.app.de.corp.thales/maps/snapshot/entry.json](https://work.search4ce.app.de.corp.thales/maps/snapshot/entry.json)
+to test it before pushing the change to master.

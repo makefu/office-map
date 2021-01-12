@@ -2,7 +2,7 @@ pipeline {
   agent { node { label 'npm' } }
   environment {
   //last_tag = sh(returnStdout: true, script: "git describe --abbrev=0 --tags").trim()
-    map_path = "/var/lib/workadventure-maps/" # TODO: this only works when workadventure is running on obby jobby and the user is allowed
+    map_path = "/var/lib/workadventure-maps/" // TODO: this only works when workadventure is running on obby jobby and the user is allowed
   }
   options {
     disableConcurrentBuilds()
@@ -15,9 +15,16 @@ pipeline {
         sh "tile-optimizer -i entry.json -o optimized";
       }
     }
-    stage ('deploy maps') {
+    stage ('deploy maps to live') {
+      when { branch 'master' }
       steps {
         sh "cp -v optimized/* ${map_path}/";
+      }
+    }
+    stage ('deploy maps to snapshot') {
+      when { not { branch 'master' } }
+      steps {
+        sh "mkdir -p ${map_path}/snapshot && cp -v optimized/* ${map_path}/snapshot/";
       }
     }
   }

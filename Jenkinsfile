@@ -33,7 +33,7 @@ pipeline {
   post {
     always {
       archiveArtifacts artifacts: 'optimized/*'
-      sh "(echo '${currentBuild.fullDisplayName}: Finished Build with status ${currentBuild.result} (took ${currentBuild.durationString})\nTest Report:';echo 'Changes:\n${changelog}See also ${currentBuild.absoluteUrl}') | citadel-send-announce"
+      sh "(echo '${currentBuild.fullDisplayName}: Finished Build with status ${currentBuild.result} (took ${currentBuild.durationString})';echo 'Changes:\n${changelog}See also ${currentBuild.absoluteUrl}') | citadel-send-announce"
     }
   }
 

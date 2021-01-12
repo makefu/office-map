@@ -56,7 +56,8 @@ pipeline {
     always {
       archiveArtifacts artifacts: 'optimized/*'
       archiveArtifacts artifacts: 'screenshots/*.png'
-      sh "(echo '${currentBuild.fullDisplayName}: Finished Build with status ${currentBuild.result} (took ${currentBuild.durationString})';echo 'Changes:\n${changelog}See also ${currentBuild.absoluteUrl}') | announce_config=/etc/workadventure-announce.cfg citadel-send-announce"
+      // TODO: show all screenshots by iterating over screenshots/*.png
+      sh "(echo '${currentBuild.fullDisplayName}: Finished Build with status ${currentBuild.result} (took ${currentBuild.durationString})';echo 'Changes:\n${changelog}\nScreenshot: ${currentBuild.absoluteUrl}/artifact/screenshots/entry.png\nBuild ${currentBuild.absoluteUrl}') | announce_config=/etc/workadventure-announce.cfg citadel-send-announce"
     }
   }
 

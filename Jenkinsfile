@@ -31,7 +31,7 @@ pipeline {
           mkdir -p screenshots/
           for i in optimized/*.json;do
               echo "rendering screenshot of $i"
-              tmxrasterizer --ignore-visibility "$i" "screenshots/$(basename $i | sed 's/.json$//').png"
+              xvfb-run tmxrasterizer --ignore-visibility "$i" "screenshots/$(basename $i | sed 's/.json$//').png"
           done
 
         ''';

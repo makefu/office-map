@@ -127,7 +127,7 @@
                 {
                  "name":"exitSceneUrl",
                  "type":"string",
-                 "value":"..\/office-map\/map.json"
+                 "value":"\/ee.json"
                 }],
          "type":"tilelayer",
          "visible":false,

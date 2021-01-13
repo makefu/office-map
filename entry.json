@@ -127,7 +127,7 @@
                 {
                  "name":"exitSceneUrl",
                  "type":"string",
-                 "value":"\/ee.json"
+                 "value":"ee.json"
                 }],
          "type":"tilelayer",
          "visible":false,

@@ -5,6 +5,7 @@ pipeline {
   environment {
   //last_tag = sh(returnStdout: true, script: "git describe --abbrev=0 --tags").trim()
     map_path = "/var/lib/workadventure-maps/" // TODO: this only works when workadventure is running on obby jobby and the user is allowed
+    play_url = "${GIT_BRANCH == "master" ?  "https://snapshot-work.search4ce.app.de.corp.thales" : "https://snapshot-work.search4ce.app.de.corp.thales"}"
     changelog = getChangeString()
   }
   options {
@@ -57,7 +58,7 @@ pipeline {
       archiveArtifacts artifacts: 'optimized/*'
       archiveArtifacts artifacts: 'screenshots/*.png'
       // TODO: show all screenshots by iterating over screenshots/*.png
-      sh "(echo '${currentBuild.fullDisplayName}: Finished Build with status ${currentBuild.result} (took ${currentBuild.durationString})';echo 'Changes:\n${changelog}Main: ${currentBuild.absoluteUrl}/artifact/screenshots/entry.png\nEE: ${currentBuild.absoluteUrl}/artifact/screenshots/ee.png\nBuild URL: ${currentBuild.absoluteUrl}') | announce_config=/etc/workadventure-announce.cfg citadel-send-announce"
+      sh "(echo '${currentBuild.fullDisplayName}: Finished Build with status ${currentBuild.result} (took ${currentBuild.durationString})';echo 'Changes:\n${changelog}Main: ${currentBuild.absoluteUrl}/artifact/screenshots/entry.png\nEE: ${currentBuild.absoluteUrl}/artifact/screenshots/ee.png\nJoin via: ${env.play_url}\nBuild URL: ${currentBuild.absoluteUrl}') | announce_config=/etc/workadventure-announce.cfg citadel-send-announce"
     }
   }
 

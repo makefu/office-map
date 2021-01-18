@@ -151,7 +151,7 @@
                 {
                  "name":"openWebsite",
                  "type":"string",
-                 "value":"https:\/\/makefu.github.io\/office-map\/static\/office-board.html"
+                 "value":"https:\/\/work.search4ce.app.de.corp.thales\/maps\/static\/office-board.html"
                 }],
          "type":"tilelayer",
          "visible":true,

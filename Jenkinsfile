@@ -21,6 +21,7 @@ pipeline {
                 echo "optimizing $i"
                 tile-optimizer -i $i -o optimized
             done
+            cp -vr static optimized/
         ''';
 
       }
@@ -34,7 +35,6 @@ pipeline {
               echo "rendering screenshot of $i"
               xvfb-run tmxrasterizer --ignore-visibility "$i" "screenshots/$(basename $i | sed 's/.json$//').png"
           done
-
         ''';
 
       }
@@ -42,13 +42,13 @@ pipeline {
     stage ('deploy maps to live') {
       when { branch 'master' }
       steps {
-        sh "cp -v optimized/* ${map_path}/";
+        sh "cp -vr optimized/* ${map_path}/";
       }
     }
     stage ('deploy maps to snapshot') {
       when { not { branch 'master' } }
       steps {
-        sh "mkdir -p ${map_path}/snapshot && cp -v optimized/* ${map_path}/snapshot/";
+        sh "mkdir -p ${map_path}/snapshot && cp -rv optimized/* ${map_path}/snapshot/";
       }
     }
   }
@@ -58,6 +58,7 @@ pipeline {
       archiveArtifacts artifacts: 'optimized/*'
       archiveArtifacts artifacts: 'screenshots/*.png'
       // TODO: show all screenshots by iterating over screenshots/*.png
+      echo "For GIT Branch: ${GIT_BRANCH}"
       sh "(echo '${currentBuild.fullDisplayName}: Finished Build with status ${currentBuild.result} (took ${currentBuild.durationString})';echo 'Changes:\n${changelog}Main: ${currentBuild.absoluteUrl}/artifact/screenshots/entry.png\nEE: ${currentBuild.absoluteUrl}/artifact/screenshots/ee.png\nJoin via: ${env.play_url}\nBuild URL: ${currentBuild.absoluteUrl}') | announce_config=/etc/workadventure-announce.cfg citadel-send-announce"
     }
   }
